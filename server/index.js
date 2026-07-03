@@ -1,5 +1,6 @@
 import express from "express";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createDatabase, printAccessTokens } from "./db.js";
@@ -37,7 +38,7 @@ function writeFelipeCredentials() {
     url: `${publicBaseUrl}/?token=${encodeURIComponent(row.token)}`
   };
 
-  const credentialsPath = path.join(__dirname, "..", "felipe-didio-credentials.json");
+  const credentialsPath = path.join(os.homedir(), "felipe-didio-credentials.json");
   fs.writeFileSync(credentialsPath, `${JSON.stringify(credentials, null, 2)}\n`);
   console.log(`Felipe Didio credentials written to ${credentialsPath}`);
 }
