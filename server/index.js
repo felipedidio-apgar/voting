@@ -222,8 +222,9 @@ app.get("/api/report", requirePerson, (req, res) => {
 });
 
 function combineGroupAverages(juryAverage, attendeeAverage) {
-  if (juryAverage == null || attendeeAverage == null) return null;
-  return (Number(juryAverage) + Number(attendeeAverage)) / 2;
+  const availableAverages = [juryAverage, attendeeAverage].filter((average) => average != null);
+  if (availableAverages.length === 0) return null;
+  return availableAverages.reduce((sum, average) => sum + Number(average), 0) / availableAverages.length;
 }
 
 if (process.env.NODE_ENV === "production") {
