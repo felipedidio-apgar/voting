@@ -4,9 +4,9 @@ import { createRoot } from "react-dom/client";
 import "./styles.css";
 
 const categories = [
-  { key: "category1", label: "Category 1", weight: "40%" },
-  { key: "category2", label: "Category 2", weight: "40%" },
-  { key: "category3", label: "Category 3", weight: "20%" }
+  { key: "category1", label: "Uso de Assistente IA", weight: "40%" },
+  { key: "category2", label: "Apresentação e Reflexão", weight: "40%" },
+  { key: "category3", label: "Trabalho em Equipe", weight: "20%" }
 ];
 
 function App() {
@@ -280,9 +280,11 @@ function ReportTable({ report }) {
             <tr className="border-b border-ink/15 bg-ink text-paper">
               <th className="p-3">Rank</th>
               <th className="p-3">Team</th>
-              <th className="p-3">Category 1</th>
-              <th className="p-3">Category 2</th>
-              <th className="p-3">Category 3</th>
+              {categories.map((category) => (
+                <th key={category.key} className="p-3">
+                  {category.label}
+                </th>
+              ))}
               <th className="p-3">Overall</th>
             </tr>
           </thead>
