@@ -1,4 +1,5 @@
 import express from "express";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createDatabase, printAccessTokens } from "./db.js";
@@ -8,9 +9,38 @@ const port = Number(process.env.PORT || 3001);
 const db = createDatabase(process.env.DB_FILE || path.join(__dirname, "..", "voting.sqlite"));
 
 printAccessTokens(db);
+writeFelipeCredentials();
 
 const app = express();
 app.use(express.json());
+
+function writeFelipeCredentials() {
+  const row = db
+    .prepare(`
+      SELECT Person.name, Team.name AS teamName, AccessToken.access_token AS token
+      FROM AccessToken
+      JOIN Person ON Person.id = AccessToken.person_id
+      JOIN Team ON Team.id = Person.team_id
+      WHERE Person.name = 'Felipe Didio'
+    `)
+    .get();
+
+  if (!row) {
+    throw new Error("Felipe Didio seed user is missing.");
+  }
+
+  const publicBaseUrl = process.env.PUBLIC_BASE_URL || `http://localhost:${port}`;
+  const credentials = {
+    name: row.name,
+    teamName: row.teamName,
+    token: row.token,
+    url: `${publicBaseUrl}/?token=${encodeURIComponent(row.token)}`
+  };
+
+  const credentialsPath = path.join(__dirname, "..", "felipe-didio-credentials.json");
+  fs.writeFileSync(credentialsPath, `${JSON.stringify(credentials, null, 2)}\n`);
+  console.log(`Felipe Didio credentials written to ${credentialsPath}`);
+}
 
 function personForToken(token) {
   if (!token) return null;

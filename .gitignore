@@ -3,4 +3,5 @@ dist/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+felipe-didio-credentials.json
 .DS_Store
